@@ -19,6 +19,9 @@ var debug = require('debug')('gfm-wordpress')
 var marked = require('marked')
 var Highlight = require('highlight.js')
 
+var CSS_FILENAME = require.resolve('highlight.js/styles/xcode.css')
+
+
 function usage() {
   console.error("Usage: node %s <path/to/README.md>", process.argv[1])
 }
@@ -45,9 +48,27 @@ function main() {
 
 
 function gfm_to_wordpress(source, callback) {
-  debug('gfm_to_wordpress: %s bytes', source.length)
+  debug('Build HTML from %s source bytes', source.length)
+  marked(source, {gfm:true, highlight:highlighter}, function(er, html) {
+    if (er)
+      return callback(er)
 
-  return callback(new Error('Not implemented'))
+    debug('Load CSS: %s', CSS_FILENAME)
+    fs.readFile(CSS_FILENAME, 'utf8', function(er, css) {
+      if (er)
+        return callback(er)
+
+      html = '<style>' + css + '</style>\n' + html
+      callback(null, html)
+    })
+  })
+}
+
+function highlighter(code, lang) {
+  lang = lang || 'plain'
+  debug('Highlight %j: %j', lang, code)
+  var result = Highlight.highlightAuto(code, [lang])
+  return result.value
 }
 
 
