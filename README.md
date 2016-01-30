@@ -63,10 +63,10 @@ By way of example, here is a screenshot of the miraculous cold weather we had th
 
 ![This is very cold in Bangkok](media/bangkok-cold-weather.png)
 
-If you are on the CDS team, check the [draft post of this very file][example-draft].
+If you are on the CDS team, check the [blog post of this very file][example-draft] (it is private, so you must be logged in or it will 404).
 
 ## License
 
 Apache 2.0
 
-[example-draft]: https://developer.ibm.com/clouddataservices/?p=5441&preview=true
+[example-draft]: https://developer.ibm.com/clouddataservices/2018/01/30/gfm-wordpress-example/
