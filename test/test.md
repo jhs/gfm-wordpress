@@ -81,6 +81,11 @@ In conclusion, I really hope this works.
 
 Above is a picture of Tux, by Larry Ewing *<lewing@isc.tamu.edu>* who created it with [The Gimp][gimp].
 
+Below is a screenshot of the iOS FoodTracker app. Since it is already published, it should not 404 like Tux does.
+
+![The FoodTracker main screen](media/FoodTracker.png)
+
+
 [END]: ----------------------------------------
 
 [cds-blog]: https://developer.ibm.com/clouddataservices/blog/
