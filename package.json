@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/jhs/gfm-wordpress/issues"
   },
-  "homepage": "https://github.com/jhs/gfm-wordpress#readme"
+  "homepage": "https://github.com/jhs/gfm-wordpress#readme",
+  "dependencies": {
+    "marked": "^0.3.5"
+  }
 }
