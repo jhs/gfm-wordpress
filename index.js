@@ -89,15 +89,20 @@ function gfm_to_wordpress(options, callback) {
   var renderer = new marked.Renderer
   renderer.heading = toc_builder.render_heading
 
-  // Rewrite media (images) hosted from "media/*" to work from WordPress instead. Otherwise, leave it as-is.
+  // Rewrite media (images and links) hosted from "media/*" to work from WordPress instead. Otherwise, leave it as-is.
   var render_image = renderer.image
+  var render_link = renderer.link
+
   renderer.image = function(href, title, text) {
     var match = href.match(/^media\/(.*)$/)
     var filename = match && match[1]
 
-    if (! filename)
-      return render_image.apply(this, arguments) // Not an image from media/
+    if (! filename) {
+      debug('Normal image processing for non-media image: %s', href)
+      return render_image.apply(this, arguments)
+    }
 
+    debug('Convert media/ image to WordPress: %s', href)
     var src = SITE + '/wp-content/uploads/sites/' + options.media + '/' + filename
     var alt = title || text
     title = title || text
@@ -105,6 +110,20 @@ function gfm_to_wordpress(options, callback) {
     var img = '<img src="'+src+'" alt="'+alt+'" title="'+title+'" class="alignnone size-full" />'
     var link = '<a href="'+src+'">' + img + '</a>'
 
+    return link
+  }
+
+  renderer.link = function(href, title, string) {
+    var match = href.match(/^media\/(.*)$/)
+    var filename = match && match[1]
+
+    if (! filename) {
+      debug('Normal link processing for non-media link: %s', href)
+      return render_link.apply(this, arguments)
+    }
+
+    var target = SITE + '/wp-content/uploads/sites/' + options.media + '/' + filename
+    var link = '<a href="'+target+'">' + string + '</a>'
     return link
   }
 
