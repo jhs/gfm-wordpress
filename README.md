@@ -55,7 +55,9 @@ The HTML will arrive on stdout. Copy all of the HTML and paste it into the blog 
 
 In the post editor, right-hand sidebar, under "Raw HTML", you should **check** the option: "Disable automatic paragraphs".
 
-And finally you must upload all media manually. Just follow the procedure from the Usage section above. As you preview the post, the images should render, because the gfm-wordpress output HTML is already referencing them correctly. If you do not see the images, well, I guess that would be a good time to start panicking.
+And finally you must upload all media manually. Just follow the procedure from the Usage section above. As you preview the post, the images should render, because the gfm-wordpress output HTML is already referencing them correctly.
+
+If you do not see the images, one problem I suspect is that they need to be pushed to a CDN of some sort. Try clicking "Insert into post". (You will notice it takes longer than you'd think.) Once it inserts the HTML into your post, just delete that HTML.
 
 By way of example, here is a screenshot of the miraculous cold weather we had the other day:
 
