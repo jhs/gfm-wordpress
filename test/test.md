@@ -75,8 +75,13 @@ By the way, this section's heading should not get into the TOC because it is too
 
 ## Conclusion
 
+![Tux Penguin alt text](media/Tux.png)
+
 In conclusion, I really hope this works.
+
+Above is a picture of Tux, by Larry Ewing *<lewing@isc.tamu.edu>* who created it with [The Gimp][gimp].
 
 [END]: ----------------------------------------
 
 [cds-blog]: https://developer.ibm.com/clouddataservices/blog/
+[gimp]: https://www.gimp.org/
