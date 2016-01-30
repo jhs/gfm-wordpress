@@ -77,11 +77,11 @@ By the way, this section's heading should not get into the TOC because it is too
 
 ![Tux Penguin alt text](img/Tux.png)
 
-In conclusion, I really hope this works.
+In conclusion, I really hope this works. [Download FoodTracker][code-download]! This download should fail in GitHub because it is not committed into this project. But it should **succeed** from `npm test` because the link will be rewritten to the file hosted in WordPress.
 
 Above is a picture of Tux, by Larry Ewing *<lewing@isc.tamu.edu>* who created it with [The Gimp][gimp]. Because it is linked from `img/` and not `media/`, it should render on GitHub and when running `npm test`.
 
-Below is a screenshot of the iOS FoodTracker app. Since it is already published, it should not 404 like Tux does.
+Below is a screenshot of the iOS FoodTracker app. It is hosted in `media/` and so it should render on GitHub; but also, since it is already published on the IBM blog, it should render in the test too. It should be clickable to load the image directly off WordPress.
 
 ![The FoodTracker main screen](media/FoodTracker.png)
 
@@ -89,4 +89,5 @@ Below is a screenshot of the iOS FoodTracker app. Since it is already published,
 [END]: ----------------------------------------
 
 [cds-blog]: https://developer.ibm.com/clouddataservices/blog/
+[code-download]: media/FoodTracker-Cloudant-Sync-1.zip
 [gimp]: https://www.gimp.org/
