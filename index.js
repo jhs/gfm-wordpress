@@ -22,6 +22,7 @@ var minimist = require('minimist')
 var Highlight = require('highlight.js')
 
 var CSS_FILENAME = require.resolve('highlight.js/styles/xcode.css')
+var SITE = "http://developer.ibm.com/clouddataservices" // Set to your own blog. YMMV.
 
 
 function usage() {
@@ -87,6 +88,25 @@ function gfm_to_wordpress(options, callback) {
   var toc_builder = mk_toc_builder()
   var renderer = new marked.Renderer
   renderer.heading = toc_builder.render_heading
+
+  // Rewrite media (images) hosted from "media/*" to work from WordPress instead. Otherwise, leave it as-is.
+  var render_image = renderer.image
+  renderer.image = function(href, title, text) {
+    var match = href.match(/^media\/(.*)$/)
+    var filename = match && match[1]
+
+    if (! filename)
+      return render_image.apply(this, arguments) // Not an image from media/
+
+    var src = SITE + '/wp-content/uploads/sites/' + options.media + '/' + filename
+    var alt = title || text
+    title = title || text
+
+    var img = '<img src="'+src+'" alt="'+alt+'" title="'+title+'" class="alignnone size-full" />'
+    var link = '<a href="'+src+'">' + img + '</a>'
+
+    return link
+  }
 
   marked(options.source, {gfm:true, highlight:highlighter, renderer:renderer}, function(er, html) {
     if (er)
