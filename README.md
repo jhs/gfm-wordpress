@@ -67,4 +67,4 @@ If you are on the CDS team, check the [draft post of this very file][example-dra
 
 Apache 2.0
 
-[example-draft]: TODO
+[example-draft]: https://developer.ibm.com/clouddataservices/?p=5441&preview=true
