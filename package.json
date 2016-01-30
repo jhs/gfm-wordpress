@@ -4,7 +4,7 @@
   "description": "Convert GitHub flavored Markdown to Wordpress-ready HTML",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node index.js test/test.md > test/test.html && open test/test.html"
   },
   "repository": {
     "type": "git",
