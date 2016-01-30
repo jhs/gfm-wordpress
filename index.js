@@ -144,7 +144,7 @@ function gfm_to_wordpress(options, callback) {
       debug('Build TOC and insert into the document')
       var toc = toc_builder.render_toc()
 
-      html = styles + html.replace(/(<h2 class="first-section">)/, toc + '\n' + '$1')
+      html = styles + html.replace(/(<h2 class="first-section">)/, toc + '$1')
       callback(null, html)
     })
   })
@@ -229,7 +229,7 @@ function mk_toc_builder() {
     })
     html.push('</ol>')
 
-    return html.join('\n')
+    return html.join('')
   }
 }
 
