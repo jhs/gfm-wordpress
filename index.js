@@ -17,7 +17,6 @@ module.exports = gfm_to_wordpress
 var fs = require('fs')
 var debug = require('debug')('gfm-wordpress')
 var marked = require('marked')
-var cheerio = require('cheerio')
 var Highlight = require('highlight.js')
 
 var CSS_FILENAME = require.resolve('highlight.js/styles/xcode.css')
@@ -50,7 +49,13 @@ function main() {
 
 function gfm_to_wordpress(source, callback) {
   debug('Build HTML from %s source bytes', source.length)
-  marked(source, {gfm:true, highlight:highlighter}, function(er, html) {
+
+  // Use a custom heading renderer to build a table of contents.
+  var toc_builder = mk_toc_builder()
+  var renderer = new marked.Renderer
+  renderer.heading = toc_builder.render_heading
+
+  marked(source, {gfm:true, highlight:highlighter, renderer:renderer}, function(er, html) {
     if (er)
       return callback(er)
 
@@ -59,11 +64,92 @@ function gfm_to_wordpress(source, callback) {
       if (er)
         return callback(er)
 
-      html = '<style>' + css + '\n' + css_bugfixes() + '</style>\n' + html
+      // Prepare the CSS styles with bugfixes.
+      var styles = '<style>' + css + '\n' + css_bugfixes() + '</style>\n'
 
+      debug('Build TOC and insert into the document')
+      var toc = toc_builder.render_toc()
+
+      html = styles + html.replace(/(<h2 class="first-section">)/, toc + '\n' + '$1')
       callback(null, html)
     })
   })
+}
+
+// Return an object that can build a table of contents.
+function mk_toc_builder() {
+  // Conflicting section names causes a problem. Track the names to append a unique suffix if necessary (like GitHub does).
+  var names = {}
+
+  var headings = []
+  var state = {headings:headings, render_heading:render_heading, render_toc:render_toc}
+  return state
+
+  function render_heading(text, level) {
+    var content = text
+
+    if (level == 1) {
+      debug('Skip TOC tracking for H1 header')
+    } else if (level > 3) {
+      debug('Skip TOC tracking for minor header: H%s', level)
+    } else {
+      // Figure out the content. The href for this section is usually the escapedText except if that conflicts with a prior heading.
+      var escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
+      var href = escapedText // TODO
+
+      var span = '<span class="header-link"></span>'
+      var anchor = '<a name="'+href+'" class="anchor" href="#'+href+'">' + span + '</a>'
+      content = anchor + text
+
+      // Figure out where this goes on the TOC.
+      if (level == 2)
+        headings.push({text:text, href:href, children:[]})
+      else if (level == 3) {
+        var parent = headings[headings.length - 1]
+        parent.children.push({text:text, href:href, children:[]})
+      }
+    }
+
+    // The first section must have the TOC inserted above it. So, for the first H2, set a CSS
+    // class "first-section" so that it can be found and have the TOC prepended.
+    var css = ''
+    if (level == 2 && headings.length == 1)
+      css = ' class="first-section"'
+
+    var header = '<h'+level + css+'>' + content + '</h'+level+'>'
+    debug('Render heading %s %j: %s', level, text, header)
+    return header
+  }
+
+  function render_toc() {
+    var html = ['<h2>Table of Contents</h2>']
+
+    html.push('<ol class="table-of-contents">')
+    headings.forEach(function(heading) {
+      html.push('<li>')
+
+      html.push('<a href="#' + heading.href + '">')
+      html.push(heading.text)
+      html.push('</a>')
+
+      if (heading.children.length > 0) {
+        html.push('<ol class="subheading">')
+        heading.children.forEach(function(heading) {
+          html.push('<li>')
+          html.push('<a href="#' + heading.href + '">')
+          html.push(heading.text)
+          html.push('</a>')
+          html.push('</li>')
+        })
+        html.push('</ol>')
+      }
+
+      html.push('</li>')
+    })
+    html.push('</ol>')
+
+    return html.join('\n')
+  }
 }
 
 function highlighter(code, lang) {
@@ -79,6 +165,9 @@ function css_bugfixes() {
   return (
     // Code embedded in ordered lists is too spaced out.
     'ol > li > p { margin-top: 0; }'
+
+    // Change subheadings to alphabatical (i.e. "section 3A").
+  + 'ol.table-of-contents ol.subheading { list-style: upper-alpha; }'
   )
 }
 
