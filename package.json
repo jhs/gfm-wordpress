@@ -22,7 +22,6 @@
   },
   "homepage": "https://github.com/jhs/gfm-wordpress#readme",
   "dependencies": {
-    "cheerio": "^0.19.0",
     "debug": "^2.2.0",
     "highlight.js": "^9.1.0",
     "marked": "^0.3.5"
