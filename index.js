@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 module.exports = gfm_to_wordpress
 
 // Copyright 2016 Jason Smith

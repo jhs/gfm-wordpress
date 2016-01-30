@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Convert GitHub flavored Markdown to Wordpress-ready HTML",
   "main": "index.js",
+  "bin": "index.js",
   "scripts": {
     "test": "rm -f test/index.html && node index.js test/test.md > test/test.html && open test/test.html"
   },
