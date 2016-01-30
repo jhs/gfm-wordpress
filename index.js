@@ -158,15 +158,27 @@ function mk_toc_builder() {
   // Conflicting section names causes a problem. Track the names to append a unique suffix if necessary (like GitHub does).
   var names = {}
 
+  var h1_count = 0
   var headings = []
   var state = {headings:headings, render_heading:render_heading, render_toc:render_toc}
   return state
 
+  // When rendering headings, a few things must happen:
+  // 1. The first H1 header must be deleted. In GitHub, it looks nice at the top; but in Wordpress the title is managed separately.
+  //    WordPress renders it as white on white, so we get a giant ugly white space.
+  // 2. H2 and H3 headers should have anchor names so that the TOC can link to them.
+  // 3. Of course, build a table of contents linking to the sections.
   function render_heading(text, level) {
     var content = text
 
     if (level == 1) {
-      debug('Skip TOC tracking for H1 header')
+      h1_count += 1
+      if (h1_count == 1) {
+        debug('Remove first H1, the article title: %s', text)
+        return ''
+      } else {
+        debug('Skip TOC tracking for H1 header: %s', text)
+      }
     } else if (level > 3) {
       debug('Skip TOC tracking for minor header: H%s', level)
     } else {
