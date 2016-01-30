@@ -17,6 +17,7 @@ module.exports = gfm_to_wordpress
 var fs = require('fs')
 var debug = require('debug')('gfm-wordpress')
 var marked = require('marked')
+var cheerio = require('cheerio')
 var Highlight = require('highlight.js')
 
 var CSS_FILENAME = require.resolve('highlight.js/styles/xcode.css')
@@ -58,7 +59,8 @@ function gfm_to_wordpress(source, callback) {
       if (er)
         return callback(er)
 
-      html = '<style>' + css + '</style>\n' + html
+      html = '<style>' + css + '\n' + css_bugfixes() + '</style>\n' + html
+
       callback(null, html)
     })
   })
@@ -69,6 +71,15 @@ function highlighter(code, lang) {
   debug('Highlight %j: %j', lang, code)
   var result = Highlight.highlightAuto(code, [lang])
   return result.value
+}
+
+
+function css_bugfixes() {
+  // Return CSS to fix various display bugs in the code.
+  return (
+    // Code embedded in ordered lists is too spaced out.
+    'ol > li > p { margin-top: 0; }'
+  )
 }
 
 
