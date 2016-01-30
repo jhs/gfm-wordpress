@@ -57,6 +57,14 @@ In the post editor, right-hand sidebar, under "Raw HTML", you should **check** t
 
 And finally you must upload all media manually. Just follow the procedure from the Usage section above. As you preview the post, the images should render, because the gfm-wordpress output HTML is already referencing them correctly. If you do not see the images, well, I guess that would be a good time to start panicking.
 
+By way of example, here is a screenshot of the miraculous cold weather we had the other day:
+
+![This is very cold in Bangkok](media/bangkok-cold-weather.png)
+
+If you are on the CDS team, check the [draft post of this very file][example-draft].
+
 ## License
 
 Apache 2.0
+
+[example-draft]: TODO
