@@ -138,8 +138,11 @@ function gfm_to_wordpress(options, callback) {
       if (er)
         return callback(er)
 
-      // Prepare the CSS styles with bugfixes.
-      var styles = '<style>' + css + '\n' + css_bugfixes() + '</style>\n'
+      // Prepare the CSS styles with bugfixes. Remove newlines because WordPress will add paragraph tags.
+      css = css + css_bugfixes()
+      css = css.replace(/\n/g, '')
+
+      var styles = '<style>' + css + '</style>\n'
 
       debug('Build TOC and insert into the document')
       var toc = toc_builder.render_toc()
@@ -205,7 +208,7 @@ function mk_toc_builder() {
   function render_toc() {
     var html = ['<h2>Table of Contents</h2>']
 
-    html.push('<ol class="table-of-contents">')
+    html.push('<ol class="table-of-contents" id="markdown-toc">')
     headings.forEach(function(heading) {
       html.push('<li>')
 
@@ -247,8 +250,13 @@ function css_bugfixes() {
     // Code embedded in ordered lists is too spaced out.
     'ol > li > p { margin-top: 0; }',
 
+    // Tighten the spacing of the table of contents.
+    'ol#markdown-toc > li { margin-top: 0; margin-bottom: 0; }',
+    'ol#markdown-toc ol.subheading { margin-top: 0; margin-bottom: 0; }',
+    'ol#markdown-toc ol.subheading > li { margin-bottom: 0; }',
+
     // Change subheadings to alphabatical (i.e. "section 3A").
-    'ol.table-of-contents ol.subheading { list-style: upper-alpha; }\n'
+    'ol#markdown-toc ol.subheading { list-style: upper-alpha; }',
   ].join('\n')
 }
 
