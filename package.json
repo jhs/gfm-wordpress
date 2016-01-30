@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/jhs/gfm-wordpress#readme",
   "dependencies": {
+    "debug": "^2.2.0",
     "highlight.js": "^9.1.0",
     "marked": "^0.3.5"
   }
