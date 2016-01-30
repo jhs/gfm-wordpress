@@ -93,9 +93,16 @@ function mk_toc_builder() {
     } else if (level > 3) {
       debug('Skip TOC tracking for minor header: H%s', level)
     } else {
-      // Figure out the content. The href for this section is usually the escapedText except if that conflicts with a prior heading.
-      var escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
-      var href = escapedText // TODO
+      // Figure out the content. The href is usually normalized text, except if that conflicts with a prior heading.
+      var href = text.toLowerCase().replace(/[^\w]+/g, '-');
+      if (! names[href]) {
+        // This is the first time this name was generated.
+        names[href] = 1
+      } else {
+        // The name collides with a previous one. Add the suffix and bump it for next time.
+        href = href + '-' + names[href]
+        names[href] += 1
+      }
 
       var span = '<span class="header-link"></span>'
       var anchor = '<a name="'+href+'" class="anchor" href="#'+href+'">' + span + '</a>'
