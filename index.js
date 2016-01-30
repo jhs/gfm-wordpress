@@ -169,7 +169,7 @@ function mk_toc_builder() {
   // 2. H2 and H3 headers should have anchor names so that the TOC can link to them.
   // 3. Of course, build a table of contents linking to the sections.
   function render_heading(text, level) {
-    var content = text
+    var prepend = ''
 
     if (level == 1) {
       h1_count += 1
@@ -182,7 +182,7 @@ function mk_toc_builder() {
     } else if (level > 3) {
       debug('Skip TOC tracking for minor header: H%s', level)
     } else {
-      // Figure out the content. The href is usually normalized text, except if that conflicts with a prior heading.
+      // Figure out the TOC link. The href is usually normalized text, except if that conflicts with a prior heading.
       var href = text.toLowerCase().replace(/[^\w]+/g, '-');
       if (! names[href]) {
         // This is the first time this name was generated.
@@ -195,7 +195,7 @@ function mk_toc_builder() {
 
       var span = '<span class="header-link"></span>'
       var anchor = '<a name="'+href+'" class="anchor" href="#'+href+'">' + span + '</a>'
-      content = anchor + text
+      prepend = anchor
 
       // Figure out where this goes on the TOC.
       if (level == 2)
@@ -212,7 +212,7 @@ function mk_toc_builder() {
     if (level == 2 && headings.length == 1)
       css = ' class="first-section"'
 
-    var header = '<h'+level + css+'>' + content + '</h'+level+'>'
+    var header = prepend + '<h'+level + css+'>' + text + '</h'+level+'>'
     debug('Render heading %s %j: %s', level, text, header)
     return header
   }
