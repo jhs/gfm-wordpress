@@ -15,21 +15,44 @@ module.exports = gfm_to_wordpress
 //    limitations under the License.
 
 var fs = require('fs')
+var URL = require('url')
 var debug = require('debug')('gfm-wordpress')
 var marked = require('marked')
+var minimist = require('minimist')
 var Highlight = require('highlight.js')
 
 var CSS_FILENAME = require.resolve('highlight.js/styles/xcode.css')
 
 
 function usage() {
-  console.error("Usage: node %s <path/to/README.md>", process.argv[1])
+  console.error("Usage: node %s <path/to/README.md> [--media=<blog-media-location>]"
+               +"\n\n"
+               +"The --media option will help to generate correct URLs to the blog post's\n"
+               +"media. Either use the post id such as '47/2016/01' or just paste an example URL:\n"
+               +"http://developer.ibm.com/clouddataservices/wp-content/uploads/sites/47/2016/01/FoodTracker.png"
+               , process.argv[1])
 }
 
 function main() {
-  var markdown_file = process.argv[2]
+  var argv = minimist(process.argv.slice(2))
+  if (argv.help)
+    return usage()
+
+  var markdown_file = argv._[0]
   if (! markdown_file)
     return usage()
+
+  var warning = null
+  var media = normalize_media(argv.media)
+  if (! media) {
+    // Try to guess the media location using today's date. The format seems to be 47/YYYY/MM. No idea what that 47 is.
+    var now = new Date
+    var site_number = '47'
+    media = site_number + '/' + now.getUTCFullYear() + '/' + pad(now.getUTCMonth()+1)
+
+    warning = 'WARNING: You probably want to provide a media location. Run with --help for details.\n'
+            + 'WARNING: Guessed media location: ' + media
+  }
 
   fs.readFile(markdown_file, 'utf8', function(er, source) {
     if (er) {
@@ -37,25 +60,35 @@ function main() {
       return usage()
     }
 
-    gfm_to_wordpress(source, function(er, html) {
+    gfm_to_wordpress({source:source, media:media}, function(er, html) {
       if (er)
         throw er
 
       console.log(html)
+
+      // Print the warning if necessary, where the user can see it.
+      if (warning)
+        process.stderr.write('\n' + warning + '\n')
     })
   })
 }
 
 
-function gfm_to_wordpress(source, callback) {
-  debug('Build HTML from %s source bytes', source.length)
+function gfm_to_wordpress(options, callback) {
+  options = options || {}
+  if (! options.source)
+    throw new Error('Need options.source')
+  if (! options.media)
+    throw new Error('Need options.media')
+
+  debug('Build HTML from %s source bytes; media=%j', options.source.length, options.media)
 
   // Use a custom heading renderer to build a table of contents.
   var toc_builder = mk_toc_builder()
   var renderer = new marked.Renderer
   renderer.heading = toc_builder.render_heading
 
-  marked(source, {gfm:true, highlight:highlighter, renderer:renderer}, function(er, html) {
+  marked(options.source, {gfm:true, highlight:highlighter, renderer:renderer}, function(er, html) {
     if (er)
       return callback(er)
 
@@ -178,6 +211,25 @@ function css_bugfixes() {
   ].join('\n')
 }
 
+//
+// Utilities
+//
+
+// Zero pad a number if necessary.
+function pad(num) {
+  return (num < 10) ? '0'+num : ''+num
+}
+
+// If a media location is given as an example URL, pull out only the useful parts.
+function normalize_media(media) {
+  if (!media || !media.match || !media.match(/^http/))
+    return media // Not a URL
+
+  var url = URL.parse(media)
+  var match = url.pathname.match(/\/sites\/(\d+\/\d+\/\d+)\//)
+  var media_id = match && match[1]
+  return media_id || null
+}
 
 if (require.main === module)
   return main()
