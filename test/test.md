@@ -27,16 +27,16 @@ Do this for an introduction to Swift
 1. Open Xcode
 1. Create a new file, `hello.swift`
 1. In `hello.swift`, add this function:
+  ``` swift
+  #if DEBUG
+      let target = "debugging world"
+  #else
+      let target = "world"
+  #endif
 
-   ``` swift
-   #if DEBUG
-       let target = "debugging world"
-   #else
-       let target = "world"
-   #endif
-
-   print("Hello, \(target)!")
-   ```
+  print("Hello, \(target)!")
+  ```
+1. You're done!
 
 ### JavaScript
 
@@ -58,8 +58,8 @@ fs.readFile('/etc/passwd', 'utf8', function(er, passwd) {
 
 To run this:
 
-    node passwd.js
-    # Output will tell you how many lines in your file
+    node passwd.js --disable-bugs
+    You have 96 lines in your passwd file
 
 [END]: ----------------------------------------
 
