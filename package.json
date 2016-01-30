@@ -1,0 +1,24 @@
+{
+  "name": "gfm-wordpress",
+  "version": "1.0.0",
+  "description": "Convert GitHub flavored Markdown to Wordpress-ready HTML",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jhs/gfm-wordpress.git"
+  },
+  "keywords": [
+    "github",
+    "github-flavored-markdown",
+    "wordpress"
+  ],
+  "author": "Jason Smith <jason.h.smith@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/jhs/gfm-wordpress/issues"
+  },
+  "homepage": "https://github.com/jhs/gfm-wordpress#readme"
+}
