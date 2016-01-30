@@ -208,7 +208,7 @@ function mk_toc_builder() {
   function render_toc() {
     var html = ['<h2>Table of Contents</h2>']
 
-    html.push('<ol class="table-of-contents" id="markdown-toc">')
+    html.push('<ol class="table-of-contents">')
     headings.forEach(function(heading) {
       html.push('<li>')
 
@@ -248,15 +248,15 @@ function highlighter(code, lang) {
 function css_bugfixes() {
   return [
     // Code embedded in ordered lists is too spaced out.
-    'ol > li > p { margin-top: 0; }',
+    '.pn-copy ol > li > p { margin-top: 0; }',
 
     // Tighten the spacing of the table of contents.
-    'ol#markdown-toc > li { margin-top: 0; margin-bottom: 0; }',
-    'ol#markdown-toc ol.subheading { margin-top: 0; margin-bottom: 0; }',
-    'ol#markdown-toc ol.subheading > li { margin-bottom: 0; }',
+    '.pn-copy ol.table-of-contents > li { margin-top: 0; margin-bottom: 0; }',
+    '.pn-copy ol.table-of-contents ol.subheading { margin-top: 0; margin-bottom: 0; }',
+    '.pn-copy ol.table-of-contents ol.subheading > li { margin-bottom: 0; }',
 
     // Change subheadings to alphabatical (i.e. "section 3A").
-    'ol#markdown-toc ol.subheading { list-style: upper-alpha; }',
+    '.pn-copy ol.table-of-contents ol.subheading { list-style: upper-alpha; }',
   ].join('\n')
 }
 
