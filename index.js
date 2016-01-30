@@ -262,6 +262,9 @@ function css_bugfixes() {
     // Code embedded in ordered lists is too spaced out.
     '.pn-copy ol > li > p { margin-top: 0; }',
 
+    // Make subheadings stand out a bit more.
+    '.pn-copy h3 { font-size: 2.00rem; }',
+
     // Tighten the spacing of the table of contents.
     '.pn-copy ol.table-of-contents > li { margin-top: 0; margin-bottom: 0; }',
     '.pn-copy ol.table-of-contents ol.subheading { margin-top: 0; margin-bottom: 0; }',
