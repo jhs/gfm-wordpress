@@ -75,13 +75,24 @@ By the way, this section's heading should not get into the TOC because it is too
 
 ## Conclusion
 
+In conclusion, I really hope this works.
+
 ![Tux Penguin alt text](img/Tux.png)
 
-In conclusion, I really hope this works. [Download FoodTracker][code-download]! This download should fail in GitHub because it is not committed into this project. But it should **succeed** from `npm test` because the link will be rewritten to the file hosted in WordPress.
+Above is a picture of Tux, by Larry Ewing *<lewing@isc.tamu.edu>* who created it with [The Gimp][gimp]. Expected behavior:
 
-Above is a picture of Tux, by Larry Ewing *<lewing@isc.tamu.edu>* who created it with [The Gimp][gimp]. Because it is linked from `img/` and not `media/`, it should render on GitHub and when running `npm test`.
+  * Browsing in GitHub will **succeed** because the image is checked into the project: `img/Tux.png`
+  * Browsing from `npm test` will **succeed** because the URL is not rewritten as the image is not in the `media/` directory.
 
-Below is a screenshot of the iOS FoodTracker app. It is hosted in `media/` and so it should render on GitHub; but also, since it is already published on the IBM blog, it should render in the test too. It should be clickable to load the image directly off WordPress.
+[Download FoodTracker][code-download]! Expected behavior:
+
+  * Clicking while browsing in GitHub will **fail** because the file is not actually committed into Git.
+  * Clicking from `npm test` will **succeed**. The link is rewritten to WordPress and the download will work.
+
+Below is a screenshot of an iOS app, `media/FoodTracker.png`. Expected behavior:
+
+  * Browsing in GitHub will **succeed** because it is commited into this project. But it will not be a clickable link.
+  * Browsing from `npm test` will **succeed** because the link is rewritten to a published WordPress media file. Furthermore, it should be a clickable link directly to the file itself.
 
 ![The FoodTracker main screen](media/FoodTracker.png)
 
