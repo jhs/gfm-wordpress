@@ -75,11 +75,11 @@ By the way, this section's heading should not get into the TOC because it is too
 
 ## Conclusion
 
-![Tux Penguin alt text](media/Tux.png)
+![Tux Penguin alt text](img/Tux.png)
 
 In conclusion, I really hope this works.
 
-Above is a picture of Tux, by Larry Ewing *<lewing@isc.tamu.edu>* who created it with [The Gimp][gimp].
+Above is a picture of Tux, by Larry Ewing *<lewing@isc.tamu.edu>* who created it with [The Gimp][gimp]. Because it is linked from `img/` and not `media/`, it should render on GitHub and when running `npm test`.
 
 Below is a screenshot of the iOS FoodTracker app. Since it is already published, it should not 404 like Tux does.
 
