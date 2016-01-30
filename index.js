@@ -167,15 +167,15 @@ function highlighter(code, lang) {
 }
 
 
+// Return CSS to fix various display bugs in the code.
 function css_bugfixes() {
-  // Return CSS to fix various display bugs in the code.
-  return (
+  return [
     // Code embedded in ordered lists is too spaced out.
-    'ol > li > p { margin-top: 0; }'
+    'ol > li > p { margin-top: 0; }',
 
     // Change subheadings to alphabatical (i.e. "section 3A").
-  + 'ol.table-of-contents ol.subheading { list-style: upper-alpha; }'
-  )
+    'ol.table-of-contents ol.subheading { list-style: upper-alpha; }\n'
+  ].join('\n')
 }
 
 
