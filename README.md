@@ -9,7 +9,8 @@ I (Jason Smith) use this tool for writing blog posts in a project on GitHub, but
 GFM-Wordpress does a few things:
 
 1. Convert GitHub-flavored Markdown to HTML
-1. In-line syntax highlighting (no need for existing CSS rules), since I cannot change the CSS rules of the blog
+1. Correct syntax highlighting (embed the required CSS) in the HTML
+1. Fix margin bugs when code is embedded inside ordered lists
 1. Build a Table of Contents
 1. Automatically correct links to a `media/` subdirectory, so that they work from Wordpress
 
