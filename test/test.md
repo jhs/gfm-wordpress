@@ -16,9 +16,17 @@ This is a subsection of the first section. It should be the first nested entry i
 
 This is another subsection. I think it is obvious where this belongs
 
+### Section Goals
+
+The goal of this section is for you to read the above subsections. Also, this section's heading will conflict with one below.
+
 ## Second section
 
 This is the second section. How about some code samples?
+
+### Section Goals
+
+In this section, you will see some example code. Also, this section's heading conflicts with one above.
 
 ### Swift Hello World
 
@@ -56,10 +64,18 @@ fs.readFile('/etc/passwd', 'utf8', function(er, passwd) {
 })
 ```
 
+#### How to run the code
+
 To run this:
 
     node passwd.js --disable-bugs
     You have 96 lines in your passwd file
+
+By the way, this section's heading should not get into the TOC because it is too minor.
+
+## Conclusion
+
+In conclusion, I really hope this works.
 
 [END]: ----------------------------------------
 
