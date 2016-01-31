@@ -24,12 +24,12 @@ var minimist = require('minimist')
 var Minifier = require('html-minifier')
 var Highlight = require('highlight.js')
 
-var CSS_FILENAME = require.resolve('highlight.js/styles/xcode.css')
+var STYLES = 'highlight.js/styles'
 var SITE = "http://developer.ibm.com/clouddataservices" // Set to your own blog. YMMV.
 
 
 function usage() {
-  console.error("Usage: node %s <path/to/README.md> [--media=<blog-media-location>]"
+  console.error("Usage: node %s <path/to/README.md> [--media=<blog-media-location>] [--theme=zenburn | xcode | etc.]"
                +"\n\n"
                +"The --media option will help to generate correct URLs to the blog post's\n"
                +"media. Either use the post id such as '47/2016/01' or just paste an example URL:\n"
@@ -64,7 +64,7 @@ function main() {
       return usage()
     }
 
-    gfm_to_wordpress({source:source, media:media, is_minify:true}, function(er, html) {
+    gfm_to_wordpress({source:source, media:media, theme:argv.theme, is_minify:true}, function(er, html) {
       if (er)
         throw er
 
@@ -85,7 +85,8 @@ function gfm_to_wordpress(options, callback) {
   if (! options.media)
     throw new Error('Need options.media')
 
-  debug('Build HTML from %s source bytes; media=%j', options.source.length, options.media)
+  var theme = options.theme || 'xcode'
+  debug('Build HTML (%s) from %s source bytes; media=%j', theme, options.source.length, options.media)
 
   // Use a custom heading renderer to build a table of contents.
   var toc_builder = mk_toc_builder()
@@ -134,8 +135,10 @@ function gfm_to_wordpress(options, callback) {
     if (er)
       return callback(er)
 
-    debug('Load CSS: %s', CSS_FILENAME)
-    fs.readFile(CSS_FILENAME, 'utf8', function(er, css) {
+    debug('Load CSS theme: %s', theme)
+    var css_filename = STYLES + '/' + theme + '.css'
+    var css_path = require.resolve(css_filename)
+    fs.readFile(css_path, 'utf8', function(er, css) {
       if (er)
         return callback(er)
 
