@@ -148,11 +148,8 @@ function gfm_to_wordpress(options, callback) {
 
       html = styles + html.replace(/(<h2 class="first-section">)/, toc + '$1')
 
-      if (options.is_minify) {
-        var old_length = html.length
+      if (options.is_minify)
         html = minify(html)
-        debug('Minify HTML %s -> %s bytes: %s%%', old_length, html.length, ((old_length - html.length) / old_length).toFixed(2))
-      }
 
       callback(null, html)
     })
@@ -313,7 +310,11 @@ function minify(html) {
              , removeScriptTypeAttributes   : true
              , removeStyleLinkTypeAttributes: true
              }
-  return Minifier.minify(html, opts)
+  var big = html.length
+
+  html = Minifier.minify(html, opts)
+  debug('Minify HTML %s -> %s bytes: %s%%', big, html.length, (100 * (big - html.length) / big).toFixed(2))
+  return html
 }
 
 if (require.main === module)
