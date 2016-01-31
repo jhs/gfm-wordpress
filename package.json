@@ -1,6 +1,6 @@
 {
   "name": "gfm-wordpress",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Convert GitHub flavored Markdown to Wordpress-ready HTML",
   "main": "index.js",
   "bin": "index.js",
