@@ -162,7 +162,7 @@ function gfm_to_wordpress(options, callback) {
 // Return an object that can build a table of contents.
 function mk_toc_builder() {
   // Conflicting section names causes a problem. Track the names to append a unique suffix if necessary (like GitHub does).
-  var names = {}
+  var slugs = {}
 
   var h1_count = 0
   var headings = []
@@ -172,7 +172,7 @@ function mk_toc_builder() {
   // When rendering headings, a few things must happen:
   // 1. The first H1 header must be deleted. In GitHub, it looks nice at the top; but in Wordpress the title is managed separately.
   //    WordPress renders it as white on white, so we get a giant ugly white space.
-  // 2. H2 and H3 headers should have anchor names so that the TOC can link to them.
+  // 2. H2 and H3 headers should have anchor names (slugs) so that the TOC can link to them.
   // 3. Of course, build a table of contents linking to the sections.
   function render_heading(text, level) {
     var prepend = ''
@@ -189,26 +189,26 @@ function mk_toc_builder() {
       debug('Skip TOC tracking for minor header: H%s', level)
     } else {
       // Figure out the TOC link. The href is usually normalized text, except if that conflicts with a prior heading.
-      var href = text.toLowerCase().replace(/[^\w]+/g, '-');
-      if (! names[href]) {
+      var slug = text.toLowerCase().replace(/[^\w]+/g, '-');
+      if (! slugs[slug]) {
         // This is the first time this name was generated.
-        names[href] = 1
+        slugs[slug] = 1
       } else {
         // The name collides with a previous one. Add the suffix and bump it for next time.
-        href = href + '-' + names[href]
-        names[href] += 1
+        slug = slug + '-' + slugs[slug]
+        slugs[slug] += 1
       }
 
       var span = '<span class="header-link"></span>'
-      var anchor = '<a name="'+href+'" class="anchor" href="#'+href+'">' + span + '</a>'
+      var anchor = '<a name="'+slug+'">' + span + '</a>'
       prepend = anchor
 
       // Figure out where this goes on the TOC.
       if (level == 2)
-        headings.push({text:text, href:href, children:[]})
+        headings.push({text:text, href:slug, children:[]})
       else if (level == 3) {
         var parent = headings[headings.length - 1]
-        parent.children.push({text:text, href:href, children:[]})
+        parent.children.push({text:text, href:slug, children:[]})
       }
     }
 
