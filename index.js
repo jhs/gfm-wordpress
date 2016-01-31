@@ -21,6 +21,7 @@ var URL = require('url')
 var debug = require('debug')('gfm-wordpress')
 var marked = require('marked')
 var minimist = require('minimist')
+var Minifier = require('html-minifier')
 var Highlight = require('highlight.js')
 
 var CSS_FILENAME = require.resolve('highlight.js/styles/xcode.css')
@@ -63,7 +64,7 @@ function main() {
       return usage()
     }
 
-    gfm_to_wordpress({source:source, media:media}, function(er, html) {
+    gfm_to_wordpress({source:source, media:media, is_minify:true}, function(er, html) {
       if (er)
         throw er
 
@@ -140,14 +141,19 @@ function gfm_to_wordpress(options, callback) {
 
       // Prepare the CSS styles with bugfixes. Remove newlines because WordPress will add paragraph tags.
       css = css + css_bugfixes()
-      css = css.replace(/\n/g, '')
-
-      var styles = '<style>' + css + '</style>\n'
+      var styles = '<style>' + css + '</style>'
 
       debug('Build TOC and insert into the document')
       var toc = toc_builder.render_toc()
 
       html = styles + html.replace(/(<h2 class="first-section">)/, toc + '$1')
+
+      if (options.is_minify) {
+        var old_length = html.length
+        html = minify(html)
+        debug('Minify HTML %s -> %s bytes: %s%%', old_length, html.length, ((old_length - html.length) / old_length).toFixed(2))
+      }
+
       callback(null, html)
     })
   })
@@ -293,6 +299,21 @@ function normalize_media(media) {
   var match = url.pathname.match(/\/sites\/(\d+\/\d+\/\d+)\//)
   var media_id = match && match[1]
   return media_id || null
+}
+
+// Minify given HTML.
+function minify(html) {
+  var opts = { minifyCSS                    : true
+             , removeIgnored                : true
+             , removeComments               : true
+             , collapseWhitespace           : true
+             , conservativeCollapse         : true
+             , removeEmptyAttributes        : true
+             , removeRedundantAttributes    : true
+             , removeScriptTypeAttributes   : true
+             , removeStyleLinkTypeAttributes: true
+             }
+  return Minifier.minify(html, opts)
 }
 
 if (require.main === module)
