@@ -111,7 +111,13 @@ function gfm_to_wordpress(options, callback) {
     var alt = title || text
     title = title || text
 
-    var img = '<img src="'+src+'" alt="'+alt+'" title="'+title+'" class="alignnone size-full" />'
+    // Set the CSS class. Add a retina class if it has a retina filename.
+    var cssClass = 'alignnone size-full'
+    match = filename.match(/@(\dx)\.\w\w\w$/)
+    if (match)
+      cssClass += ' retina-'+match[1]
+
+    var img = '<img src="'+src+'" alt="'+alt+'" title="'+title+'" class="'+cssClass+'" />'
     var link = '<a href="'+src+'">' + img + '</a>'
 
     return link
@@ -270,6 +276,9 @@ function css_bugfixes() {
 
     // Make subheadings stand out a bit more.
     '.pn-copy h3 { font-size: 2.00rem; }',
+
+    // Reduce retina image sizes by half.
+    '.pn-copy img.retina-2x { width: 50%; height: 50%; }',
 
     // Tighten the spacing of the table of contents.
     '.pn-copy ol.table-of-contents > li { margin-top: 0; margin-bottom: 0; }',
