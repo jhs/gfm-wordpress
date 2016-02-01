@@ -41,7 +41,7 @@ There are two ways to figure out the media location: by using the URL of an imag
   1. Log in to WordPress
   1. Create a draft post. Click "Save Draft" at least once, just to be sure.
   1. Click "Add Media"
-  1. Click the drop-down ("All media items") and choose "Uploaded to this post"
+  1. Click the "Upload Files" tab and click the "Select Files" button
   1. Select a file and upload it in.
   1. When the upload is done, click the image so it is checked
   1. In the right sidebar, the URL will be visible. Select the entire URL and copy it to your clipboard.
