@@ -21,7 +21,7 @@ Make a Markdown document in any Git project. You can preview it in GitHub normal
 
 1. In code samples, do not exceed 72 characters per line, or it will auto-wrap and look ugly. You can set a guide in the Xcode preferences. But remember not to take a screenshot with the guide enabled.
 
-  ![Page guide in Xcode](media/page-guide-72.png)
+  ![Page guide in Xcode](media/page-guide@2x.png)
 1. Commit images in `media/` relative to your `.md` file. Reference it like this: `![Alt text goes here](media/image-filename.png)`
 1. Commit downloads in `media/` just like images. Link to them normally, e.g. `[example-download]: media/example-project.tar.gz`
 
@@ -60,10 +60,6 @@ The HTML will arrive on stdout. Copy all of the HTML and paste it into the blog 
 You must upload all media manually. Just follow the procedure from the Usage section above. As you preview the post, the images should render, because the gfm-wordpress output HTML is already referencing them correctly.
 
 If you do not see the images, one problem I suspect is that they need to be pushed to a CDN of some sort. Try clicking "Insert into post". (You will notice it takes longer than you'd think.) Once it inserts the HTML into your post, just delete that HTML.
-
-By way of example, here is a screenshot of the miraculous cold weather we had the other day:
-
-![This is very cold in Bangkok](media/bangkok-cold-weather.png)
 
 If you are on the CDS team, check the [blog post of this very file][example-draft] (it is private, so you must be logged in or it will 404).
 
