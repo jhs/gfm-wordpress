@@ -13,6 +13,7 @@ GFM-WordPress does a few things:
 1. Fix a few CSS bugs
 1. Build a Table of Contents
 1. Automatically correct links to a `media/` subdirectory, so that they work from WordPress
+1. If an image retina resolution (`"foo@2x.png"`), reduce its size so it does not look ridiculous
 
 ## Authoring a Document
 
