@@ -24,6 +24,7 @@ var minimist = require('minimist')
 var Minifier = require('html-minifier')
 var Highlight = require('highlight.js')
 
+var ARGV = minimist(process.argv.slice(2))
 var STYLES = 'highlight.js/styles'
 var SITE = "http://developer.ibm.com/clouddataservices" // Set to your own blog. YMMV.
 
@@ -38,16 +39,15 @@ function usage() {
 }
 
 function main() {
-  var argv = minimist(process.argv.slice(2))
-  if (argv.help)
+  if (ARGV.help)
     return usage()
 
-  var markdown_file = argv._[0]
+  var markdown_file = ARGV._[0]
   if (! markdown_file)
     return usage()
 
   var warning = null
-  var media = normalize_media(argv.media)
+  var media = normalize_media(ARGV.media)
   if (! media) {
     // Try to guess the media location using today's date. The format seems to be 47/YYYY/MM. No idea what that 47 is.
     var now = new Date
@@ -64,7 +64,7 @@ function main() {
       return usage()
     }
 
-    gfm_to_wordpress({source:source, media:media, theme:argv.theme, is_minify:true}, function(er, html) {
+    gfm_to_wordpress({source:source, media:media, theme:ARGV.theme, is_minify:true}, function(er, html) {
       if (er)
         throw er
 
