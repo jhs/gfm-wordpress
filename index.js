@@ -30,7 +30,7 @@ var SITE = "http://developer.ibm.com/clouddataservices" // Set to your own blog.
 
 
 function usage() {
-  console.error("Usage: node %s <path/to/README.md> [--media=<blog-media-location>] [--theme=zenburn | xcode | etc.]"
+  console.error("Usage: node %s <path/to/README.md> [--media=<blog-media-location>] [--theme=zenburn | xcode | etc.] [--no-retina]"
                +"\n\n"
                +"The --media option will help to generate correct URLs to the blog post's\n"
                +"media. Either use the post id such as '47/2016/01' or just paste an example URL:\n"
@@ -270,15 +270,12 @@ function highlighter(code, lang) {
 
 // Return CSS to fix various display bugs in the code.
 function css_bugfixes() {
-  return [
+  var style = [
     // Code embedded in ordered lists is too spaced out.
     '.pn-copy ol > li > p { margin-top: 0; }',
 
     // Make subheadings stand out a bit more.
     '.pn-copy h3 { font-size: 2.00rem; }',
-
-    // Reduce retina image sizes by half.
-    '.pn-copy img.retina-2x { width: 50%; height: 50%; }',
 
     // Tighten the spacing of the table of contents.
     '.pn-copy ol.table-of-contents > li { margin-top: 0; margin-bottom: 0; }',
@@ -287,7 +284,13 @@ function css_bugfixes() {
 
     // Change subheadings to alphabatical (i.e. "section 3A").
     '.pn-copy ol.table-of-contents ol.subheading { list-style: upper-alpha; }',
-  ].join('\n')
+  ]
+
+  // Reduce retina image sizes by half.
+  if (ARGV.retina !== false)
+    style.push('.pn-copy img.retina-2x { width: 50%; height: 50%; }')
+
+  return style.join('\n')
 }
 
 //
