@@ -117,7 +117,10 @@ function gfm_to_wordpress(options, callback) {
     if (match)
       cssClass += ' retina-'+match[1]
 
-    var img = '<img src="'+src+'" alt="'+alt+'" title="'+title+'" class="'+cssClass+'" />'
+    // Add "lazy-src" data to disable Photon resizing.
+    var lazy_src = 'data-lazy-src="XXX"'
+    lazy_src = ''
+    var img = '<img src="'+src+'" alt="'+alt+'" title="'+title+'" class="'+cssClass+'" '+lazy_src+' />'
     var link = '<a href="'+src+'">' + img + '</a>'
 
     return link
