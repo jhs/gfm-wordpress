@@ -320,7 +320,7 @@ function css_bugfixes() {
     //'.pn-copy img.retina-3x { }',
 
     // Figures with captions.
-    '.pn-copy .figure { width: 66%; }',
+    '.pn-copy .figure { max-width: 66%; }',
     '.pn-copy .figure .caption { }',
 
     // Change subheadings to alphabatical (i.e. "section 3A").
