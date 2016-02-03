@@ -104,6 +104,8 @@ function gfm_to_wordpress(options, callback) {
   renderer.image = function(href, title, text) {
     var match = href.match(/^media\/(.*)$/)
     var filename = match && match[1]
+    text = text || ''
+    title = title || ''
 
     if (! filename) {
       debug('Normal image processing for non-media image: %s', href)
@@ -111,13 +113,26 @@ function gfm_to_wordpress(options, callback) {
     }
 
     debug('Convert media/ image to WordPress: %s', href)
+    debug('-> %j', [].slice.apply(arguments))
     var src = SITE + '/wp-content/uploads/sites/' + options.media + '/' + filename
-    var alt = title || text
-    title = title || text
+
+    // Use the title as a side-channel API to control things.
+    var img_opts = {}
+    var parts = title.split(';').map(function(line) { return line.trim() })
+    title = parts.shift()
+    parts.forEach(function(part) {
+      // Support both "foo" and also "foo = bar".
+      var opt = part.split(/\s*=\s*/)
+      if (opt[1])
+        img_opts[opt[0]] = opt[1]
+      else
+        img_opts[opt[0]] = true
+    })
+    debug('Image options: %j', img_opts)
 
     // Set the CSS class. Add a retina class if it has a retina filename.
     var dim = find_dimensions(base_dir + '/' + href)
-    var img = '<img src="'+src+'" alt="'+alt+'" title="'+title+'" class="'+dim.cssClass+'" '+dim.html+' />'
+    var img = '<img src="'+src+'" alt="'+text+'" title="'+title+'" class="'+dim.cssClass+'" '+dim.html+' />'
     var link = '<a href="'+src+'">' + img + '</a>'
 
     return link
