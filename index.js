@@ -335,8 +335,8 @@ function find_dimensions(filename) {
       var multiplier = +match[1]
       result.cssClass += ' retina-'+multiplier+'x' // e.g. retina-2x
 
-      result.width = Math.round(result.width / 2)
-      result.height = Math.round(result.height / 2)
+      result.width = Math.round(result.width / multiplier)
+      result.height = Math.round(result.height / multiplier)
     }
 
     result.html = ' height="'+result.height+'" width="'+result.width+'"'
