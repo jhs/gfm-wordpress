@@ -14,6 +14,7 @@ GFM-WordPress does a few things:
 1. Build a Table of Contents
 1. Automatically correct links to a `media/` subdirectory, so that they work from WordPress
 1. If an image has retina resolution (`"foo@2x.png"`), reduce its size so it does not look ridiculous
+1. Support for basic "figures": images that float in the text flow, with captions
 
 ## Authoring a Document
 
