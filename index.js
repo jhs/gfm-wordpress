@@ -18,10 +18,12 @@ module.exports = gfm_to_wordpress
 
 var fs = require('fs')
 var URL = require('url')
+var Path = require('path')
 var debug = require('debug')('gfm-wordpress')
 var marked = require('marked')
 var minimist = require('minimist')
 var Minifier = require('html-minifier')
+var ImageSize = require('image-size')
 var Highlight = require('highlight.js')
 
 var ARGV = minimist(process.argv.slice(2))
@@ -314,6 +316,33 @@ function normalize_media(media) {
   var match = url.pathname.match(/\/sites\/(\d+\/\d+\/\d+)\//)
   var media_id = match && match[1]
   return media_id || null
+}
+
+// Return an object with dimension information of a filename. Uses synchronous i/o.
+function find_dimensions(filename) {
+  var size = null
+  var result = {}
+  result.cssClass = 'alignnone size-full'
+  result.html = ''
+
+  try { size = ImageSize(filename) }
+  catch (er) {
+    debug('Error finding image dimensions of %s: %s', filename, er.message)
+  }
+
+  if (size) {
+    result.type = size.type
+    result.width = size.width
+    result.height = size.height
+    result.html = ' height="'+size.height+'" width="'+size.width+'"'
+
+    var match = filename.match(/@(\dx)\.\w\w\w$/)
+    if (match)
+      result.cssClass += ' retina-'+match[1]
+  }
+
+  debug('Dimensions of %s: %j', filename, result)
+  return result
 }
 
 // Minify given HTML.
