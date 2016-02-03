@@ -66,7 +66,8 @@ function main() {
       return usage()
     }
 
-    gfm_to_wordpress({source:source, media:media, theme:ARGV.theme, is_minify:true}, function(er, html) {
+    var dir = Path.dirname(markdown_file)
+    gfm_to_wordpress({source:source, media:media, directory:dir, theme:ARGV.theme, is_minify:true}, function(er, html) {
       if (er)
         throw er
 
@@ -87,6 +88,7 @@ function gfm_to_wordpress(options, callback) {
   if (! options.media)
     throw new Error('Need options.media')
 
+  var base_dir = options.directory || '.'
   var theme = options.theme || 'xcode'
   debug('Build HTML (%s) from %s source bytes; media=%j', theme, options.source.length, options.media)
 
