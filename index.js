@@ -325,11 +325,17 @@ function find_dimensions(filename) {
     result.type = size.type
     result.width = size.width
     result.height = size.height
-    result.html = ' height="'+size.height+'" width="'+size.width+'"'
 
-    var match = filename.match(/@(\dx)\.\w\w\w$/)
-    if (match)
-      result.cssClass += ' retina-'+match[1]
+    var match = filename.match(/@(\d+)x\.\w\w\w$/)
+    if (match) {
+      var multiplier = +match[1]
+      result.cssClass += ' retina-'+multiplier+'x' // e.g. retina-2x
+
+      result.width = Math.round(result.width / 2)
+      result.height = Math.round(result.height / 2)
+    }
+
+    result.html = ' height="'+result.height+'" width="'+result.width+'"'
   }
 
   debug('Dimensions of %s: %j', filename, result)
