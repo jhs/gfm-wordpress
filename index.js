@@ -116,15 +116,8 @@ function gfm_to_wordpress(options, callback) {
     title = title || text
 
     // Set the CSS class. Add a retina class if it has a retina filename.
-    var cssClass = 'alignnone size-full'
-    match = filename.match(/@(\dx)\.\w\w\w$/)
-    if (match)
-      cssClass += ' retina-'+match[1]
-
-    // Add "lazy-src" data to disable Photon resizing.
-    var lazy_src = 'data-lazy-src="XXX"'
-    lazy_src = ''
-    var img = '<img src="'+src+'" alt="'+alt+'" title="'+title+'" class="'+cssClass+'" '+lazy_src+' />'
+    var dim = find_dimensions(base_dir + '/' + href)
+    var img = '<img src="'+src+'" alt="'+alt+'" title="'+title+'" class="'+dim.cssClass+'" '+dim.html+' />'
     var link = '<a href="'+src+'">' + img + '</a>'
 
     return link
@@ -292,10 +285,6 @@ function css_bugfixes() {
     // Change subheadings to alphabatical (i.e. "section 3A").
     '.pn-copy ol.table-of-contents ol.subheading { list-style: upper-alpha; }',
   ]
-
-  // Reduce retina image sizes by half.
-  if (ARGV.retina !== false)
-    style.push('.pn-copy img.retina-2x { width: 50%; height: 50%; }')
 
   return style.join('\n')
 }
