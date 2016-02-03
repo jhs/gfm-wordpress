@@ -135,7 +135,25 @@ function gfm_to_wordpress(options, callback) {
     var img = '<img src="'+src+'" alt="'+text+'" title="'+title+'" class="'+dim.cssClass+'" '+dim.html+' />'
     var link = '<a href="'+src+'">' + img + '</a>'
 
-    return link
+    var html = link
+
+    // Figures are images with a bit fancier look.
+    if (img_opts.figure) {
+      var caption = ""
+      if (text)
+        caption = '<span class="caption">'+text+'</span>'
+
+      var cssClass = 'figure '
+      cssClass += (img_opts.figure == 'left') ? 'alignleft' : 'alignright'
+
+      html = [ '<div class="' + cssClass + '">'
+             ,   link
+             ,   caption
+             , '</div>'
+             ].join('')
+    }
+
+    return html
   }
 
   renderer.link = function(href, title, string) {
@@ -301,8 +319,12 @@ function css_bugfixes() {
     //'.pn-copy img.retina-2x { }',
     //'.pn-copy img.retina-3x { }',
 
+    // Figures with captions.
+    '.pn-copy .figure { width: 66%; }',
+    '.pn-copy .figure .caption { }',
+
     // Change subheadings to alphabatical (i.e. "section 3A").
-    '.pn-copy ol.table-of-contents ol.subheading { list-style: upper-alpha; }',
+    '.pn-copy ol.table-of-contents ol.subheading { list-style: upper-alpha; }'
   ]
 
   return style.join('\n')
