@@ -282,6 +282,10 @@ function css_bugfixes() {
     '.pn-copy ol.table-of-contents ol.subheading { margin-top: 0; margin-bottom: 0; }',
     '.pn-copy ol.table-of-contents ol.subheading > li { margin-bottom: 0; }',
 
+    // An unused retina CSS class. This used to set 50% width however that was incompatible with WordPress/Jetpack.
+    //'.pn-copy img.retina-2x { }',
+    //'.pn-copy img.retina-3x { }',
+
     // Change subheadings to alphabatical (i.e. "section 3A").
     '.pn-copy ol.table-of-contents ol.subheading { list-style: upper-alpha; }',
   ]
