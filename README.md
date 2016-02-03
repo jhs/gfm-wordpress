@@ -13,7 +13,7 @@ GFM-WordPress does a few things:
 1. Fix a few CSS bugs
 1. Build a Table of Contents
 1. Automatically correct links to a `media/` subdirectory, so that they work from WordPress
-1. If an image retina resolution (`"foo@2x.png"`), reduce its size so it does not look ridiculous
+1. If an image has retina resolution (`"foo@2x.png"`), reduce its size so it does not look ridiculous
 
 ## Authoring a Document
 
@@ -23,6 +23,7 @@ Make a Markdown document in any Git project. You can preview it in GitHub normal
 
   ![Page guide in Xcode](media/page-guide@2x.png)
 1. Commit images in `media/` relative to your `.md` file. Reference it like this: `![Alt text goes here](media/image-filename.png)`
+1. If you take a screenshot from a retina device (iPhone, MacBook pro, etc.), give the filename a `@2x` suffix, e.g. `screenshot@2x.png`
 1. Commit downloads in `media/` just like images. Link to them normally, e.g. `[example-download]: media/example-project.tar.gz`
 
 If you follow these rules, everything will work when you view the document in GitHub, **and** it will work when you paste into WordPress.
