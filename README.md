@@ -22,7 +22,7 @@ Make a Markdown document in any Git project. You can preview it in GitHub normal
 
 1. In code samples, do not exceed 72 characters per line, or it will auto-wrap and look ugly. You can set a guide in the Xcode preferences. But remember not to take a screenshot with the guide enabled.
 
-  ![Page guide in Xcode](media/page-guide@2x.png)
+  ![Page guide in Xcode](media/page-guide@2x.png '; border')
 1. Commit images in `media/` relative to your `.md` file. Reference it like this: `![Alt text goes here](media/image-filename.png)`
 1. If you take a screenshot from a retina device (iPhone, MacBook pro, etc.), give the filename a `@2x` suffix, e.g. `screenshot@2x.png`
 1. Commit downloads in `media/` just like images. Link to them normally, e.g. `[example-download]: media/example-project.tar.gz`
