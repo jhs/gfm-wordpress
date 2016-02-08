@@ -328,8 +328,12 @@ function css_bugfixes() {
     //'.pn-copy img.retina-2x { }',
     //'.pn-copy img.retina-3x { }',
 
+    // Ensure that images do not float beside headings.
+    '.pn-copy h2 { padding-top: 1em; }',
+    '.pn-copy h1, .pn-copy h2, .pn-copy h3 { clear: both; }',
+
     // Images with borders.
-    `.pn-copy .border { border: 2px solid ${GREY}; }`,
+    `.pn-copy .border { border: 1px solid ${GREY}; }`,
 
     // Figures with captions.
     '.pn-copy .figure { max-width: 66%; }',
