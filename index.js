@@ -28,6 +28,7 @@ var Highlight = require('highlight.js')
 
 var ARGV = minimist(process.argv.slice(2))
 var STYLES = 'highlight.js/styles'
+var GREY = '#2d2e31'
 var SITE = "http://developer.ibm.com/clouddataservices" // Set to your own blog. YMMV.
 
 
@@ -104,56 +105,64 @@ function gfm_to_wordpress(options, callback) {
   renderer.image = function(href, title, text) {
     var match = href.match(/^media\/(.*)$/)
     var filename = match && match[1]
-    text = text || ''
-    title = title || ''
-
     if (! filename) {
       debug('Normal image processing for non-media image: %s', href)
       return render_image.apply(this, arguments)
     }
 
     debug('Convert media/ image to WordPress: %s', href)
-    debug('-> %j', [].slice.apply(arguments))
-    var src = SITE + '/wp-content/uploads/sites/' + options.media + '/' + filename
+    var img = { src       : `/wp-content/uploads/sites/${options.media}/${filename}`
+              , dim       : find_dimensions(base_dir + '/' + href)
+              , text      : text || ''
+              , title     : title || ''
+              , style     : ''
+              }
+    var wrap = { before:[ `<a href="${img.src}">` ]
+               , after :[ '</a>'              ]
+               }
+    debug('Image state: %j', img)
 
     // Use the title as a side-channel API to control things.
-    var img_opts = {}
-    var parts = title.split(';').map(function(line) { return line.trim() })
-    title = parts.shift()
+    var parts = img.title.split(';').map(function(line) { return line.trim() })
+    img.title = parts.shift()
     parts.forEach(function(part) {
       // Support both "foo" and also "foo = bar".
       var opt = part.split(/\s*=\s*/)
-      if (opt[1])
-        img_opts[opt[0]] = opt[1]
-      else
-        img_opts[opt[0]] = true
-    })
-    debug('Image options: %j', img_opts)
+      var key = opt[0]
+      var val = opt[1]
+      if (typeof val == 'undefined')
+        val = true
 
-    // Set the CSS class. Add a retina class if it has a retina filename.
-    var dim = find_dimensions(base_dir + '/' + href)
-    var img = '<img src="'+src+'" alt="'+text+'" title="'+title+'" class="'+dim.cssClass+'" '+dim.html+' />'
-    var link = '<a href="'+src+'">' + img + '</a>'
+      if (key == 'border') {
+        img.dim.cssClass += ' border'
 
-    var html = link
+        // Allow overriding the color.
+        if (val && typeof val == 'string')
+          img.style += `background-color: ${val};`
+      }
 
-    // Figures are images with a bit fancier look.
-    if (img_opts.figure) {
-      var caption = ""
-      if (text)
-        caption = '<span class="caption">'+text+'</span>'
+      if (key == 'figure') {
+        // Make a floating "figure," with a caption.
+        var mattCss = (val == 'left')
+          ? 'alignleft'
+          : 'alignright'
 
-      var cssClass = 'figure '
-      cssClass += (img_opts.figure == 'left') ? 'alignleft' : 'alignright'
+        wrap.before.unshift(`<div class="figure ${mattCss}">`)
+        if (text)
+          wrap.after.push(`<span class="caption">${text}</span>`)
+        wrap.after.push('</div>')
+      }
+    }) // parts
 
-      html = [ '<div class="' + cssClass + '">'
-             ,   link
-             ,   caption
-             , '</div>'
-             ].join('')
-    }
+    // Build the final HTML.
+    var html = []
+    html = html.concat(wrap.before)
+    html.push(`<img src="${img.src}" alt="${img.text}" title="${img.title}" style="${img.style}"`
+             +` class="${img.dim.cssClass}" height="${img.dim.height}" width="${img.dim.width}" />`)
+    html = html.concat(wrap.after)
 
-    return html
+    debug('Image HTML: %j', html)
+    return html.join('')
   }
 
   renderer.link = function(href, title, string) {
@@ -319,6 +328,9 @@ function css_bugfixes() {
     //'.pn-copy img.retina-2x { }',
     //'.pn-copy img.retina-3x { }',
 
+    // Images with borders.
+    `.pn-copy .border { border: 2px solid ${GREY}; }`,
+
     // Figures with captions.
     '.pn-copy .figure { max-width: 66%; }',
     '.pn-copy .figure .caption { }',
@@ -355,7 +367,6 @@ function find_dimensions(filename) {
   var size = null
   var result = {}
   result.cssClass = 'alignnone size-full'
-  result.html = ''
 
   try { size = ImageSize(filename) }
   catch (er) {
@@ -375,8 +386,6 @@ function find_dimensions(filename) {
       result.width = Math.round(result.width / multiplier)
       result.height = Math.round(result.height / multiplier)
     }
-
-    result.html = ' height="'+result.height+'" width="'+result.width+'"'
   }
 
   debug('Dimensions of %s: %j', filename, result)
