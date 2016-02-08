@@ -105,7 +105,7 @@ function gfm_to_wordpress(options, callback) {
   renderer.image = render_img
   renderer.link  = render_link
 
-  marked(options.source, {gfm:true, highlight:highlighter, renderer:renderer}, function(er, html) {
+  marked(options.source, {gfm:true, smartypants:true, highlight:highlighter, renderer:renderer}, function(er, html) {
     if (er)
       return callback(er)
 
