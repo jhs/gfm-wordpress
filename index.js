@@ -102,7 +102,37 @@ function gfm_to_wordpress(options, callback) {
   var render_image = renderer.image
   var render_link = renderer.link
 
-  renderer.image = function(href, title, text) {
+  renderer.image = render_img
+  renderer.link  = render_link
+
+  marked(options.source, {gfm:true, highlight:highlighter, renderer:renderer}, function(er, html) {
+    if (er)
+      return callback(er)
+
+    debug('Load CSS theme: %s', theme)
+    var css_filename = STYLES + '/' + theme + '.css'
+    var css_path = require.resolve(css_filename)
+    fs.readFile(css_path, 'utf8', function(er, css) {
+      if (er)
+        return callback(er)
+
+      // Prepare the CSS styles with bugfixes. Remove newlines because WordPress will add paragraph tags.
+      css = css + css_bugfixes()
+      var styles = '<style>' + css + '</style>'
+
+      debug('Build TOC and insert into the document')
+      var toc = toc_builder.render_toc()
+
+      html = styles + html.replace(/(<h2 class="first-section">)/, toc + '$1')
+
+      if (options.is_minify)
+        html = minify(html)
+
+      callback(null, html)
+    })
+  })
+
+  function render_img(href, title, text) {
     var match = href.match(/^media\/(.*)$/)
     var filename = match && match[1]
     if (! filename) {
@@ -165,7 +195,7 @@ function gfm_to_wordpress(options, callback) {
     return html.join('')
   }
 
-  renderer.link = function(href, title, string) {
+  function render_link(href, title, string) {
     var match = href.match(/^media\/(.*)$/)
     var filename = match && match[1]
 
@@ -178,33 +208,6 @@ function gfm_to_wordpress(options, callback) {
     var link = '<a href="'+target+'">' + string + '</a>'
     return link
   }
-
-  marked(options.source, {gfm:true, highlight:highlighter, renderer:renderer}, function(er, html) {
-    if (er)
-      return callback(er)
-
-    debug('Load CSS theme: %s', theme)
-    var css_filename = STYLES + '/' + theme + '.css'
-    var css_path = require.resolve(css_filename)
-    fs.readFile(css_path, 'utf8', function(er, css) {
-      if (er)
-        return callback(er)
-
-      // Prepare the CSS styles with bugfixes. Remove newlines because WordPress will add paragraph tags.
-      css = css + css_bugfixes()
-      var styles = '<style>' + css + '</style>'
-
-      debug('Build TOC and insert into the document')
-      var toc = toc_builder.render_toc()
-
-      html = styles + html.replace(/(<h2 class="first-section">)/, toc + '$1')
-
-      if (options.is_minify)
-        html = minify(html)
-
-      callback(null, html)
-    })
-  })
 }
 
 // Return an object that can build a table of contents.
