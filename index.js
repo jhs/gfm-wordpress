@@ -124,7 +124,7 @@ function gfm_to_wordpress(options, callback) {
       var toc = toc_builder.render_toc()
 
       html = html.replace(/(<h2 class="first-section">)/, toc + '$1')
-      html = styles + html
+      //html = styles + html
 
       if (options.is_minify)
         html = minify(html)
